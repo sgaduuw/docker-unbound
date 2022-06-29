@@ -53,7 +53,7 @@ WORKDIR /tmp/src
 COPY --from=unbound /opt /opt
 
 RUN apk --update add ca-certificates ldns-tools libevent nghttp2-libs expat \
-                     hiredis protobuf-c bash perl && \
+                     hiredis protobuf-c bash perl drill && \
     addgroup -S _unbound && \
     adduser -S _unbound -G _unbound && \
     rm -rf \

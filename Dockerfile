@@ -2,8 +2,8 @@ FROM debian:stable as unbound
 LABEL maintainer="Eelco Wesemann <dockerhub@init1.nl>"
 
 ENV NAME=unbound \
-    UNBOUND_VERSION=1.16.0 \
-    UNBOUND_SHA256=6701534c938eb019626601191edc6d012fc534c09d2418d5b92827db0cbe48a5
+    UNBOUND_VERSION=1.16.1 \
+    UNBOUND_SHA256=2fe4762abccd564a0738d5d502f57ead273e681e92d50d7fba32d11103174e9a
 
 WORKDIR /tmp/src
 
@@ -54,7 +54,7 @@ FROM debian:stable
 LABEL maintainer="Eelco Wesemann <dockerhub@init1.nl>"
 
 ENV NAME=unbound \
-    VERSION=1.16.0 \
+    VERSION=1.16.1 \
     SUMMARY="${NAME} is a validating, recursive, and caching DNS resolver." \
     DESCRIPTION="${NAME} is a validating, recursive, and caching DNS resolver."
 

@@ -1,23 +1,31 @@
-FROM alpine:3.15 as unbound
+FROM debian:stable as unbound
 LABEL maintainer="Eelco Wesemann <dockerhub@init1.nl>"
 
 ENV NAME=unbound \
     UNBOUND_VERSION=1.16.0 \
-    UNBOUND_SHA256=6701534c938eb019626601191edc6d012fc534c09d2418d5b92827db0cbe48a5 \
-    UNBOUND_DOWNLOAD_URL=https://nlnetlabs.nl/downloads/unbound/unbound-1.16.0.tar.gz
+    UNBOUND_SHA256=6701534c938eb019626601191edc6d012fc534c09d2418d5b92827db0cbe48a5
 
 WORKDIR /tmp/src
 
-RUN apk --update add bash curl ldns-tools libevent expat g++ make \
-                     libevent-dev expat-dev nghttp2-dev protobuf-c-dev \
-                     protobuf-c-compiler openssl-dev hiredis-dev && \
-    curl -sSL $UNBOUND_DOWNLOAD_URL -o unbound.tar.gz && \
+RUN build_deps="curl gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev libhiredis-dev make" && \
+    set -x && \
+    DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
+      $build_deps \
+      bsdmainutils \
+      ca-certificates \
+      ldnsutils \
+      libevent-2.1-7 \
+      libexpat1 \
+      libprotobuf-c-dev \
+      libssl-dev \
+      protobuf-c-compiler && \
+    curl -sSL https://nlnetlabs.nl/downloads/unbound/unbound-${UNBOUND_VERSION}.tar.gz -o unbound.tar.gz && \
     echo "${UNBOUND_SHA256} *unbound.tar.gz" | sha256sum -c - && \
     tar xzf unbound.tar.gz && \
     rm -f unbound.tar.gz && \
-    cd unbound-1.16.0 && \
-    addgroup -S _unbound && \
-    adduser -S _unbound -G _unbound && \
+    cd unbound-${UNBOUND_VERSION} && \
+    groupadd _unbound && \
+    useradd -g _unbound -s /etc -d /dev/null _unbound && \
     ./configure \
         --disable-dependency-tracking \
         --prefix=/opt/unbound \
@@ -34,17 +42,19 @@ RUN apk --update add bash curl ldns-tools libevent expat g++ make \
         --enable-subnet && \
     make install && \
     mv /opt/unbound/etc/unbound/unbound.conf /opt/unbound/etc/unbound/unbound.conf.example && \
+    apt-get purge -y --auto-remove \
+      $build_deps && \
     rm -rf \
         /opt/unbound/share/man \
         /tmp/* \
-        /var/tmp/*
+        /var/tmp/* \
+        /var/lib/apt/lists/*
 
-
-FROM alpine:3.15
+FROM debian:stable
 LABEL maintainer="Eelco Wesemann <dockerhub@init1.nl>"
 
 ENV NAME=unbound \
-    UNBOUND_VERSION=1.16.0 \
+    VERSION=1.16.0 \
     SUMMARY="${NAME} is a validating, recursive, and caching DNS resolver." \
     DESCRIPTION="${NAME} is a validating, recursive, and caching DNS resolver."
 
@@ -52,14 +62,25 @@ WORKDIR /tmp/src
 
 COPY --from=unbound /opt /opt
 
-RUN apk --update add ca-certificates ldns-tools libevent nghttp2-libs expat \
-                     hiredis protobuf-c bash perl drill && \
-    addgroup -S _unbound && \
-    adduser -S _unbound -G _unbound && \
+RUN set -x && \
+    DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
+      bsdmainutils \
+      ca-certificates \
+      ldnsutils \
+      libevent-2.1-7 \
+      libnghttp2-14 \
+      libexpat1 \
+      libhiredis0.14 \
+      libprotobuf-c1 && \
+    groupadd _unbound && \
+    useradd -g _unbound -s /etc -d /dev/null _unbound && \
+    apt-get purge -y --auto-remove \
+      $build_deps && \
     rm -rf \
         /opt/unbound/share/man \
         /tmp/* \
-        /var/tmp/*
+        /var/tmp/* \
+        /var/lib/apt/lists/*
 
 COPY data/ /
 

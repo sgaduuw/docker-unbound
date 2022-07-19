@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo "============="
+echo "pre_push done"
+echo "============="

@@ -3,4 +3,7 @@
 #export DOCKER_CLI_EXPERIMENTAL=enabled
 
 docker images
-docker buildx build --pull --platform linux/amd64 --tag ${IMAGE_NAME} . || docker images
+docker buildx build --pull --platform linux/amd64 -f ${DOCKERFILE_PATH} --tag ${IMAGE_NAME} . || docker images
+echo "=========="
+echo "build done"
+echo "=========="

@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-export DOCKER_CLI_EXPERIMENTAL=enabled
+#export DOCKER_CLI_EXPERIMENTAL=enabled
 
 docker images
-docker buildx build --pull --platform linux/amd64 --tag sgaduuw/unbound-test:test --push .
-docker images
+docker buildx build --pull --platform linux/amd64 --tag ${IMAGE_NAME} . || docker images

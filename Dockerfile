@@ -1,4 +1,4 @@
-FROM debian:stable as unbound
+FROM --platform=$BUILDPLATFORM debian:stable as unbound
 LABEL maintainer="Eelco Wesemann <dockerhub@init1.nl>"
 
 ENV NAME=unbound \
@@ -51,7 +51,7 @@ RUN build_deps="curl file gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev
         /var/tmp/* \
         /var/lib/apt/lists/*
 
-FROM debian:stable
+FROM --platform=$BUILDPLATFORM debian:stable
 LABEL maintainer="Eelco Wesemann <dockerhub@init1.nl>"
 
 ENV NAME=unbound \

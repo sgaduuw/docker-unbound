@@ -40,6 +40,7 @@ RUN build_deps="curl gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev libh
         --enable-cachedb \
         --with-libhiredis \
         --enable-subnet && \
+    make -j $(getconf _NPROCESSORS_ONLN) all && \
     make install && \
     mv /opt/unbound/etc/unbound/unbound.conf /opt/unbound/etc/unbound/unbound.conf.example && \
     apt-get purge -y --auto-remove \

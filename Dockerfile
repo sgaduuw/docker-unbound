@@ -1,4 +1,4 @@
-FROM debian:stable as unbound
+FROM --platform=$BUILDPLATFORM debian:stable as unbound
 LABEL maintainer="Eelco Wesemann <dockerhub@init1.nl>"
 
 ENV NAME=unbound \
@@ -7,7 +7,7 @@ ENV NAME=unbound \
 
 WORKDIR /tmp/src
 
-RUN build_deps="curl gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev libhiredis-dev make" && \
+RUN build_deps="curl file gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev libhiredis-dev make" && \
     set -x && \
     DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
       $build_deps \
@@ -51,7 +51,7 @@ RUN build_deps="curl gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev libh
         /var/tmp/* \
         /var/lib/apt/lists/*
 
-FROM debian:stable
+FROM --platform=$BUILDPLATFORM debian:stable
 LABEL maintainer="Eelco Wesemann <dockerhub@init1.nl>"
 
 ENV NAME=unbound \

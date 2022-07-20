@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+docker buildx build --pull --load  --platform linux/amd64,linux/armhf,linux/arm64 -f ${DOCKERFILE_PATH} --tag ${IMAGE_NAME} .
+echo "=========="
+echo "build done"
+echo "=========="

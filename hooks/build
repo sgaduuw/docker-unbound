@@ -9,7 +9,7 @@ echo "==========="
 docker buildx build \
   --push \
   --cache-from ${IMAGE_NAME} \
-  --platform linux/amd64,linux/386,linux/armhf,linux/arm64 \
+  --platform linux/amd64,linux/arm64 \
   --tag ${IMAGE_NAME} .
 
 echo "=========="

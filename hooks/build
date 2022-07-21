@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 
-docker buildx build --pull --load  --platform linux/amd64,linux/armhf,linux/arm64 -f ${DOCKERFILE_PATH} --tag ${IMAGE_NAME} .
+export DOCKER_CLI_EXPERIMENTAL=enabled
+
+echo "==========="
+echo "build start for ${IMAGE_NAME}"
+echo "==========="
+
+docker buildx build \
+  --push \
+  --cache-from ${IMAGE_NAME} \
+  --platform linux/amd64,linux/386,linux/armhf,linux/arm64 \
+  --tag ${IMAGE_NAME} .
+
 echo "=========="
-echo "build done"
+echo "build done for ${IMAGE_NAME}"
 echo "=========="

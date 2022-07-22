@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM debian:stable as unbound
 LABEL maintainer="Eelco Wesemann <dockerhub@init1.nl>"
 
@@ -51,13 +52,14 @@ RUN build_deps="curl file gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev
         /var/tmp/* \
         /var/lib/apt/lists/*
 
+# syntax=docker/dockerfile:1
 FROM debian:stable
 LABEL maintainer="Eelco Wesemann <dockerhub@init1.nl>"
 
 ENV NAME=unbound \
     VERSION=1.16.1 \
-    SUMMARY="${NAME} is a validating, recursive, and caching DNS resolver." \
-    DESCRIPTION="${NAME} is a validating, recursive, and caching DNS resolver."
+    SUMMARY="Unbound is a validating, recursive, and caching DNS resolver." \
+    DESCRIPTION="Unbound is a validating, recursive, and caching DNS resolver."
 
 WORKDIR /tmp/src
 

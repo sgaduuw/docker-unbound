@@ -6,12 +6,19 @@ echo "==========="
 echo "build start for ${IMAGE_NAME}"
 echo "==========="
 
+# this builds and pushes the image, but interestingly, it does not make it
+# available locally. --load would do that, but that actually doesn't work on
+# multi-arch builds
 docker buildx build \
   --push \
   --cache-from ${IMAGE_NAME} \
   --platform linux/amd64,linux/arm64 \
   --tag ${IMAGE_NAME} .
 
+# sleep to let the image settle on the registry
+sleep 5
+
+# now pull the results to make the images available on the build machine
 docker pull --platform linux/amd64 ${IMAGE_NAME}
 docker pull --platform linux/arm64 ${IMAGE_NAME}
 

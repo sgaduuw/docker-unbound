@@ -7,9 +7,13 @@ echo "build start for ${IMAGE_NAME}"
 echo "==========="
 
 docker buildx build \
+  --push \
   --cache-from ${IMAGE_NAME} \
   --platform linux/amd64,linux/arm64 \
   --tag ${IMAGE_NAME} .
+
+docker pull --platform linux/amd64 ${IMAGE_NAME}
+docker pull --platform linux/arm64 ${IMAGE_NAME}
 
 echo "=========="
 echo "build done for ${IMAGE_NAME}"

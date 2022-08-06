@@ -1,13 +1,14 @@
+# syntax=docker/dockerfile:1
 FROM debian:stable as unbound
 LABEL maintainer="Eelco Wesemann <dockerhub@init1.nl>"
 
 ENV NAME=unbound \
-    UNBOUND_VERSION=1.16.1 \
-    UNBOUND_SHA256=2fe4762abccd564a0738d5d502f57ead273e681e92d50d7fba32d11103174e9a
+    UNBOUND_VERSION=1.16.2 \
+    UNBOUND_SHA256=2e32f283820c24c51ca1dd8afecfdb747c7385a137abe865c99db4b257403581
 
 WORKDIR /tmp/src
 
-RUN build_deps="curl gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev libhiredis-dev make" && \
+RUN build_deps="curl file gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev libhiredis-dev make" && \
     set -x && \
     DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
       $build_deps \
@@ -40,6 +41,7 @@ RUN build_deps="curl gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev libh
         --enable-cachedb \
         --with-libhiredis \
         --enable-subnet && \
+    make -j $(getconf _NPROCESSORS_ONLN) all && \
     make install && \
     mv /opt/unbound/etc/unbound/unbound.conf /opt/unbound/etc/unbound/unbound.conf.example && \
     apt-get purge -y --auto-remove \
@@ -50,13 +52,14 @@ RUN build_deps="curl gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev libh
         /var/tmp/* \
         /var/lib/apt/lists/*
 
+# syntax=docker/dockerfile:1
 FROM debian:stable
 LABEL maintainer="Eelco Wesemann <dockerhub@init1.nl>"
 
 ENV NAME=unbound \
-    VERSION=1.16.1 \
-    SUMMARY="${NAME} is a validating, recursive, and caching DNS resolver." \
-    DESCRIPTION="${NAME} is a validating, recursive, and caching DNS resolver."
+    VERSION=1.16.2 \
+    SUMMARY="Unbound is a validating, recursive, and caching DNS resolver." \
+    DESCRIPTION="Unbound is a validating, recursive, and caching DNS resolver."
 
 WORKDIR /tmp/src
 

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+export DOCKER_CLI_EXPERIMENTAL=enabled
+
+echo "==========="
+echo "build start for ${IMAGE_NAME}"
+echo "==========="
+
+# this builds and pushes the image, but interestingly, it does not make it
+# available locally. --load would do that, but that actually doesn't work on
+# multi-arch builds
+docker buildx build \
+  --push \
+  --cache-from ${IMAGE_NAME} \
+  --platform linux/amd64,linux/arm64 \
+  --tag ${IMAGE_NAME} .
+
+echo "=========="
+echo "build done for ${IMAGE_NAME}"
+echo "=========="

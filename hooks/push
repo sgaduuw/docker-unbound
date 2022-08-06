@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+echo "========="
+echo "Fake push"
+echo "========="
+exit 0
